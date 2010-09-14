@@ -18,17 +18,17 @@ Ftgl: class {
 	font: FTGLfont*
 	fakeBuffer := "88888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888"
 	
-	init: func(x,y: Int,filename: String) {
-		font = createTextureFont(filename)
+	init: func(x,y: Int, filename: String) {
+		font = createTextureFont(filename toCString())
 		setFontFaceSize(font,x,y)
 		setFontCharMap(font,ft_encoding_unicode)
-		printf("Loaded font: %s\n",filename)
+		("Loaded font: " + filename) println()
 	}
 	
 	render: func(x,y,s: Double, mirror: Bool, text: String) {
 		glPushMatrix()
 		glTranslated(x, y, 0)
-		glScaled(s, s, s);
+		glScaled(s, s, s)
 		if(mirror) {
 			glRotated(180, 1, 0, 0)
 		}
@@ -37,10 +37,10 @@ Ftgl: class {
 	}
 	
 	
-	renderFont: extern(ftglRenderFont) static func(FTGLfont*,String,Int)
-	setFontFaceSize: extern(ftglSetFontFaceSize) static func(FTGLfont*,Int,Int)
-	setFontCharMap: extern(ftglSetFontCharMap) static func(FTGLfont*,Int)
-	createTextureFont: extern(ftglCreateTextureFont) static func(String)
+	renderFont: extern(ftglRenderFont) static func(FTGLfont*, String, Int)
+	setFontFaceSize: extern(ftglSetFontFaceSize) static func(FTGLfont*, Int, Int)
+	setFontCharMap: extern(ftglSetFontCharMap) static func(FTGLfont*, Int)
+	createTextureFont: extern(ftglCreateTextureFont) static func(String) -> FTGLfont*
 	
 	getFontBBox: func(length: Int) -> FtglBBox {
 		tmp : Float[6]
