@@ -21,7 +21,7 @@ Ftgl: class {
 	init: func(x,y: Int, filename: String) {
 		font = createTextureFont(filename toCString())
 		setFontFaceSize(font,x,y)
-		setFontCharMap(font,ft_encoding_unicode)
+		setFontCharMap(font, ft_encoding_unicode)
 		("Loaded font: " + filename) println()
 	}
 	
@@ -32,19 +32,19 @@ Ftgl: class {
 		if(mirror) {
 			glRotated(180, 1, 0, 0)
 		}
-		renderFont(font,text,FTGL_RENDER_ALL)
+        renderFont(font, text toCString(), FTGL_RENDER_ALL)
 		glPopMatrix()
 	}
 	
 	
-	renderFont: extern(ftglRenderFont) static func(FTGLfont*, String, Int)
+	renderFont: extern(ftglRenderFont) static func(FTGLfont*, Char*, Int)
 	setFontFaceSize: extern(ftglSetFontFaceSize) static func(FTGLfont*, Int, Int)
 	setFontCharMap: extern(ftglSetFontCharMap) static func(FTGLfont*, Int)
-	createTextureFont: extern(ftglCreateTextureFont) static func(String) -> FTGLfont*
+	createTextureFont: extern(ftglCreateTextureFont) static func(Char*) -> FTGLfont*
 	
 	getFontBBox: func(length: Int) -> FtglBBox {
 		tmp : Float[6]
-		ftglGetFontBBox(font,fakeBuffer,length,tmp)
+		ftglGetFontBBox(font, fakeBuffer, length, tmp)
 		ret : FtglBBox
 		ret llx=tmp[0]
 		ret lly=tmp[1]
