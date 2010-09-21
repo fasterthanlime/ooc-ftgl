@@ -1,6 +1,7 @@
 Name: ftgl
 Description: ftgl
-SourcePath: source/
+SourcePath: source
+Includes: FTGL/ftgl.h
 Libs: -lftgl
 Pkgs: ftgl
 
