@@ -1,7 +1,6 @@
 Name: ftgl
-Description: ftgl
+Description: FTGL font rendering for OpenGL
 SourcePath: source
-Includes: FTGL/ftgl.h
-Libs: -lftgl
 Pkgs: ftgl
+Includes: FTGL/ftgl.h
 
