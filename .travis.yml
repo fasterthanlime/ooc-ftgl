@@ -1,0 +1,16 @@
+before_install:
+  - sudo aptitude -y -q install curl make libgc-dev libsdl1.2-dev libglew1.6-dev libglu-dev libftgl-dev
+  - git clone --depth=1 git://github.com/nddrylliog/rock.git 
+  - (cd rock && make -s quick-rescue)
+  - export PATH=$PATH:$PWD/rock/bin
+  - git clone --depth=1 git://github.com/nddrylliog/ooc-sdl.git
+  - git clone --depth=1 git://github.com/nddrylliog/ooc-glew.git
+  - git clone --depth=1 git://github.com/nddrylliog/ooc-glu.git
+
+script:
+  - export OOC_LIBS=$PWD
+  - cd samples
+  - mkdir -p travis
+  - rock -v sdl-ftgl.ooc -o=travis/sdl-ftgl
+
+
