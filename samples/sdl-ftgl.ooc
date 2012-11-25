@@ -5,7 +5,7 @@ use glew
 import glew
 
 use glu
-import glu/Glu
+import glu
 
 use ftgl
 import ftgl

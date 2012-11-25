@@ -1,3 +1,4 @@
+[![Build Status](https://secure.travis-ci.org/nddrylliog/ooc-ftgl.png?branch=master)](https://travis-ci.org/nddrylliog/ooc-ftgl)
 
 ## ooc-ftgl
 
