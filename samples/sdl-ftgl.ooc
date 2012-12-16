@@ -10,7 +10,7 @@ import glu
 use ftgl
 import ftgl
 
-main: func {
+main: func (argc: Int, argv: CString*) {
 
     app := Application new()
     app draw()
