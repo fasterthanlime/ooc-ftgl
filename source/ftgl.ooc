@@ -30,15 +30,16 @@ Ftgl: class {
 		if(mirror) {
 			glRotated(180, 1, 0, 0)
 		}
-        renderFont(font, text toCString(), FTGL_RENDER_ALL)
+                renderFont(font, text, FTGL_RENDER_ALL)
 		glPopMatrix()
 	}
 	
 	
-	renderFont: extern(ftglRenderFont) static func(FTGLfont*, Char*, Int)
+	renderFont: extern(ftglRenderFont) static func(FTGLfont*, CString, Int)
 	setFontFaceSize: extern(ftglSetFontFaceSize) static func(FTGLfont*, Int, Int)
 	setFontCharMap: extern(ftglSetFontCharMap) static func(FTGLfont*, Int)
-	createTextureFont: extern(ftglCreateTextureFont) static func(Char*) -> FTGLfont*
+	createTextureFont: extern(ftglCreateTextureFont) static func(CString) -> FTGLfont*
+	createPixmapFont: extern(ftglCreatePixmapFont) static func(CString) -> FTGLfont*
 	
 	getFontBBox: func(length: Int) -> FtglBBox {
 		tmp : Float[6]
