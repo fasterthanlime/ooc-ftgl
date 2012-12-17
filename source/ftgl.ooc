@@ -21,7 +21,6 @@ Ftgl: class {
 		font = createTextureFont(filename toCString())
 		setFontFaceSize(font,x,y)
 		setFontCharMap(font, ft_encoding_unicode)
-		("Loaded font: " + filename) println()
 	}
 	
 	render: func(x,y,s: Double, mirror: Bool, text: String) {
