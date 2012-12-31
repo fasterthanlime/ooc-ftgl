@@ -1,7 +1,8 @@
 use glew
-use ftgl
-
 import glew
+
+use ftgl
+include FTGL/ftgl
 
 FTGLfont: extern cover
 FTGL_RENDER_ALL: extern Int
