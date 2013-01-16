@@ -4,57 +4,57 @@ import glew
 use ftgl
 include FTGL/ftgl
 
-FTGLfont: extern cover
+FTGLFont: extern cover from FTGLfont
 FTGL_RENDER_ALL: extern Int
 ftglSetFontFaceSize: extern func(...)
 ft_encoding_unicode: extern Int
-ftglGetFontBBox: extern func(...)
+ftglGetFontBBox: extern func(FTGLFont*, CString, Int, Float*)
 
 FtglBBox: cover {
-	llx,lly,llz,urx,ury,urz: Float
+    llx,lly,llz,urx,ury,urz: Float
 }
 
 Ftgl: class {
-	font: FTGLfont*
-	fakeBuffer := "88888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888" toCString()
+    font: FTGLFont*
 	
-	init: func(x,y: Int, filename: String) {
-		font = createTextureFont(filename toCString())
-		setFontFaceSize(font,x,y)
-		setFontCharMap(font, ft_encoding_unicode)
-	}
+    init: func(x, y: Int, filename: String) {
+        font = createTextureFont(filename toCString())
+        setFontFaceSize(font,x,y)
+        setFontCharMap(font, ft_encoding_unicode)
+    }
 	
-	render: func(x,y,s: Double, mirror: Bool, text: String) {
-		glPushMatrix()
-		glTranslated(x, y, 0)
-		glScaled(s, s, s)
-		if(mirror) {
-			glRotated(180, 1, 0, 0)
-		}
-                renderFont(font, text, FTGL_RENDER_ALL)
-		glPopMatrix()
-	}
+    render: func(x, y, s: Double, mirror: Bool, text: String) {
+        glPushMatrix()
+
+        glTranslated(x, y, 0)
+        glScaled(s, s, s)
+        if(mirror) {
+            glRotated(180, 1, 0, 0)
+        }
+
+        renderFont(font, text, FTGL_RENDER_ALL)
+        glPopMatrix()
+    }
 	
+    renderFont: extern(ftglRenderFont) static func(FTGLFont*, CString, Int)
+    setFontFaceSize: extern(ftglSetFontFaceSize) static func(FTGLFont*, Int, Int)
+    setFontCharMap: extern(ftglSetFontCharMap) static func(FTGLFont*, Int)
+    createTextureFont: extern(ftglCreateTextureFont) static func(CString) -> FTGLFont*
+    createPixmapFont: extern(ftglCreatePixmapFont) static func(CString) -> FTGLFont*
 	
-	renderFont: extern(ftglRenderFont) static func(FTGLfont*, CString, Int)
-	setFontFaceSize: extern(ftglSetFontFaceSize) static func(FTGLfont*, Int, Int)
-	setFontCharMap: extern(ftglSetFontCharMap) static func(FTGLfont*, Int)
-	createTextureFont: extern(ftglCreateTextureFont) static func(CString) -> FTGLfont*
-	createPixmapFont: extern(ftglCreatePixmapFont) static func(CString) -> FTGLfont*
-	
-	getFontBBox: func(length: Int) -> FtglBBox {
-		tmp : Float[6]
-		ftglGetFontBBox(font, fakeBuffer, length, tmp)
-		ret : FtglBBox
-		ret llx=tmp[0]
-		ret lly=tmp[1]
-		ret llz=tmp[2]
-		ret urx=tmp[3]
-		ret ury=tmp[4]
-		ret urz=tmp[5]
-		
-		return ret
-	}
+    getFontBBox: func (value: String) -> FtglBBox {
+        bb := gc_malloc(6 * Float size) as Float*
+        ftglGetFontBBox(font, value toCString(), value size, bb)
+        ret : FtglBBox
+        ret llx = bb[0]
+        ret lly = bb[1]
+        ret llz = bb[2]
+        ret urx = bb[3]
+        ret ury = bb[4]
+        ret urz = bb[5]
+        
+        return ret
+    }
 }
 
 
