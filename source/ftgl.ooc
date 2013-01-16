@@ -6,7 +6,6 @@ include FTGL/ftgl
 
 FTGLFont: extern cover from FTGLfont
 FTGL_RENDER_ALL: extern Int
-ftglSetFontFaceSize: extern func(...)
 ft_encoding_unicode: extern Int
 ftglGetFontBBox: extern func(FTGLFont*, CString, Int, Float*)
 
@@ -18,22 +17,13 @@ Ftgl: class {
     font: FTGLFont*
 	
     init: func(x, y: Int, filename: String) {
-        font = createTextureFont(filename toCString())
-        setFontFaceSize(font,x,y)
+        font = createTextureFont(filename)
+        setFontFaceSize(font, x, y)
         setFontCharMap(font, ft_encoding_unicode)
     }
 	
-    render: func(x, y, s: Double, mirror: Bool, text: String) {
-        glPushMatrix()
-
-        glTranslated(x, y, 0)
-        glScaled(s, s, s)
-        if(mirror) {
-            glRotated(180, 1, 0, 0)
-        }
-
+    render: func (text: String) {
         renderFont(font, text, FTGL_RENDER_ALL)
-        glPopMatrix()
     }
 	
     renderFont: extern(ftglRenderFont) static func(FTGLFont*, CString, Int)
