@@ -24,7 +24,7 @@ main: func (argc: Int, argv: CString*) {
 Application: class {
 
     width, height: Int
-    ftgl: Ftgl
+    font: Font
 
     init: func {
 	(width, height) = (640, 480)
@@ -33,7 +33,7 @@ Application: class {
 	SDL wmSetCaption("SDL glew ftgl example", null)
 
 	reshape(width, height)
-	ftgl = Ftgl new(80, 72, "Sansation_Regular.ttf")
+	font = Font new(80, 72, "Sansation_Regular.ttf")
     }
 
     quit: func {
@@ -58,7 +58,7 @@ Application: class {
 	glPushMatrix()
 	glLoadIdentity()
 
-	gluOrtho2D(0, width, height, 0)
+	gluOrtho2D(0, width, 0, height)
 	glMatrixMode(GL_MODELVIEW)
 	glPushMatrix()
 	glLoadIdentity()
@@ -80,7 +80,11 @@ Application: class {
 
 	begin2D()
 	glColor3f(0.2, 0.2, 0.2)
-	ftgl render(20, 40, 0.4, true, "SDL + glew + FTGL demo")
+        glPushMatrix()
+        glTranslatef(20, 40, 0)
+        glScalef(0.4, 0.4, 0.4)
+	font render("SDL + glew + FTGL demo")
+        glPopMatrix()
 	end2D()
 
 	SDL glSwapBuffers()
