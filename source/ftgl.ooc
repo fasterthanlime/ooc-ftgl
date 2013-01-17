@@ -4,47 +4,79 @@ import glew
 use ftgl
 include FTGL/ftgl
 
-FTGLFont: extern cover from FTGLfont
-FTGL_RENDER_ALL: extern Int
-ft_encoding_unicode: extern Int
-ftglGetFontBBox: extern func(FTGLFont*, CString, Int, Float*)
+/**
+ * A font loaded by FTGL, with a certain font size
+ */
+Font: class {
 
-FtglBBox: cover {
-    llx,lly,llz,urx,ury,urz: Float
-}
-
-Ftgl: class {
-    font: FTGLFont*
+    _font: FTGLFont*
 	
     init: func(x, y: Int, filename: String) {
-        font = createTextureFont(filename)
-        setFontFaceSize(font, x, y)
-        setFontCharMap(font, ft_encoding_unicode)
+        _font = ftglCreateTextureFont(filename)
+        ftglSetFontFaceSize(_font, x, y)
+        ftglSetFontCharMap(_font, ft_encoding_unicode)
     }
 	
-    render: func (text: String) {
-        renderFont(font, text, FTGL_RENDER_ALL)
+    render: func (text: String, mode := RenderMode all) {
+        ftglRenderFont(_font, text, mode)
+    }
+
+    getLineHeight: func -> Float {
+        ftglGetFontLineHeight(_font)
     }
 	
-    renderFont: extern(ftglRenderFont) static func(FTGLFont*, CString, Int)
-    setFontFaceSize: extern(ftglSetFontFaceSize) static func(FTGLFont*, Int, Int)
-    setFontCharMap: extern(ftglSetFontCharMap) static func(FTGLFont*, Int)
-    createTextureFont: extern(ftglCreateTextureFont) static func(CString) -> FTGLFont*
-    createPixmapFont: extern(ftglCreatePixmapFont) static func(CString) -> FTGLFont*
-	
-    getFontBBox: func (value: String) -> FtglBBox {
-        bb := gc_malloc(6 * Float size) as Float*
-        ftglGetFontBBox(font, value toCString(), value size, bb)
-        ret : FtglBBox
-        ret llx = bb[0]
-        ret lly = bb[1]
-        ret llz = bb[2]
-        ret urx = bb[3]
-        ret ury = bb[4]
-        ret urz = bb[5]
-        
-        return ret
+    getBounds: func (value: String) -> AABB {
+        ret := gc_malloc(Float size * 6) as Float*
+        ftglGetFontBBox(_font, value toCString(), value size, ret)
+        AABB new(ret)
+    }
+
+}
+
+/**
+ * An axis-align bounding box in 3D space
+ */
+AABB: cover {
+    /* Lower-left */
+    llx, lly, llz: Float
+
+    /* Upper-right */
+    urx, ury, urz: Float
+
+    init: func@ (arr: Float*) {
+        (llx, lly, llz) = (arr[0], arr[1], arr[2])
+        (urx, ury, urz) = (arr[3], arr[4], arr[5])
+    }
+
+    getWidth: func -> Float {
+        urx - llx
+    }
+
+    getHeight: func -> Float {
+        ury - lly
     }
 }
 
+/* Low-level C functions */
+
+FTGLFont: extern cover from FTGLfont
+
+RenderMode: enum {
+    front: extern(FTGL_RENDER_FRONT)
+    back:  extern(FTGL_RENDER_BACK)
+    side:  extern(FTGL_RENDER_SIDE)
+    all:   extern(FTGL_RENDER_ALL)
+}
+
+ft_encoding_unicode: extern Int
+
+ftglCreateTextureFont: extern func(CString) -> FTGLFont*
+ftglCreatePixmapFont: extern func(CString) -> FTGLFont*
+
+ftglRenderFont: extern func(FTGLFont*, CString, RenderMode)
+
+ftglGetFontBBox: extern func(FTGLFont*, CString, Int, Float*)
+ftglSetFontFaceSize: extern func(FTGLFont*, Int, Int)
+ftglSetFontCharMap: extern func(FTGLFont*, Int)
+ftglGetFontLineHeight: extern func(FTGLFont*) -> Float
 
