@@ -1,5 +1,5 @@
-use glew
-import glew
+use sdl2
+import sdl2/[OpenGL]
 
 use ftgl
 include FTGL/ftgl
