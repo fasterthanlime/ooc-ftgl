@@ -1,9 +1,6 @@
 
-use sdl
-import sdl/Core
-
-use glew
-import glew
+use sdl2
+import sdl2/[Core, OpenGL]
 
 use glu
 import glu
@@ -26,11 +23,23 @@ Application: class {
     width, height: Int
     font: Font
 
+    window: SdlWindow
+    context:  SdlGlContext
+
     init: func {
 	(width, height) = (640, 480)
 	SDL init(SDL_INIT_EVERYTHING)
-	screen := SDL setMode(width, height, 16, SDL_OPENGL)
-	SDL wmSetCaption("SDL glew ftgl example", null)
+	window := SDL createWindow(
+            "SDL glew ftgl example",
+            SDL_WINDOWPOS_CENTERED,
+            SDL_WINDOWPOS_CENTERED,
+            width,
+            height,
+            0
+        )
+
+        context := SDL glCreateContext(window)
+        SDL glMakeCurrent(window, context)
 
 	reshape(width, height)
 	font = Font new(80, 72, "Sansation_Regular.ttf")
@@ -75,6 +84,7 @@ Application: class {
     }
 
     draw: func {
+        SDL glMakeCurrent(window, context)
 	glClearColor(0.9, 0.9, 0.9, 1.0)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
@@ -87,7 +97,7 @@ Application: class {
         glPopMatrix()
 	end2D()
 
-	SDL glSwapBuffers()
+        SDL glSwapWindow(window)
     }
 
 }
